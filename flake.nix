@@ -137,12 +137,17 @@
         helix-unwrapped = craneLibStable.buildPackage (commonArgs
           // {
             cargoArtifacts = craneLibStable.buildDepsOnly commonArgs;
+            postBuild = ''
+              mkdir lib_steel
+              HELIX_STEEL_CONFIG_TARGET=./lib_steel cargo xtask code-gen
+            '';
             postInstall = ''
-              mkdir -p $out/share/applications $out/share/icons/hicolor/scalable/apps $out/share/icons/hicolor/256x256/apps
+              mkdir -p $out/share/applications $out/share/icons/hicolor/scalable/apps $out/share/icons/hicolor/256x256/apps $out/lib/steel
               cp contrib/Helix.desktop $out/share/applications
               cp logo.svg $out/share/icons/hicolor/scalable/apps/helix.svg
               cp contrib/helix.png $out/share/icons/hicolor/256x256/apps
               installShellCompletion contrib/completion/hx.{bash,fish,zsh}
+              cp -r lib_steel/* $out/lib/steel
             '';
           });
         helix = makeOverridableHelix self.packages.${system}.helix-unwrapped {};

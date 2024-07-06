@@ -329,7 +329,7 @@ fn load_static_commands(engine: &mut Engine, generate_sources: bool) {
     template_function_no_context("get-init-scm-path");
 
     if generate_sources {
-        let mut target_directory = helix_runtime_search_path();
+        let mut target_directory = code_gen_target();
 
         if !target_directory.exists() {
             std::fs::create_dir(&target_directory).unwrap();
@@ -404,7 +404,7 @@ fn load_typed_commands(engine: &mut Engine, generate_sources: bool) {
     }
 
     if generate_sources {
-        let mut target_directory = helix_runtime_search_path();
+        let mut target_directory = code_gen_target();
         if !target_directory.exists() {
             std::fs::create_dir(&target_directory).unwrap();
         }
@@ -473,6 +473,13 @@ fn sw_wrap_indicator(config: &mut SoftWrap, option: Option<String>) {
 
 fn wrap_at_text_width(config: &mut SoftWrap, option: Option<bool>) {
     config.wrap_at_text_width = option;
+}
+
+
+fn code_gen_target() -> PathBuf {
+    std::env::var("HELIX_STEEL_CONFIG_TARGET")
+        .map(PathBuf::from)
+        .unwrap_or(helix_runtime_search_path())
 }
 
 fn load_configuration_api(engine: &mut Engine, generate_sources: bool) {
@@ -741,7 +748,7 @@ fn load_configuration_api(engine: &mut Engine, generate_sources: bool) {
             template_function_arity_1(func);
         }
 
-        let mut target_directory = helix_runtime_search_path();
+        let mut target_directory = code_gen_target();
 
         if !target_directory.exists() {
             std::fs::create_dir(&target_directory).unwrap();
@@ -868,7 +875,7 @@ fn load_editor_api(engine: &mut Engine, generate_sources: bool) {
 
         template_function_arity_2("editor-switch-action!");
 
-        let mut target_directory = helix_runtime_search_path();
+        let mut target_directory = code_gen_target();
 
         if !target_directory.exists() {
             std::fs::create_dir(&target_directory).unwrap();
@@ -1990,7 +1997,7 @@ fn load_misc_api(engine: &mut Engine, generate_sources: bool) {
     template_function_arity_2("helix-await-callback");
 
     if generate_sources {
-        let mut target_directory = helix_runtime_search_path();
+        let mut target_directory = code_gen_target();
 
         if !target_directory.exists() {
             std::fs::create_dir(&target_directory).unwrap();
