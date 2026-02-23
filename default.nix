@@ -46,7 +46,7 @@ in
       allowBuiltinFetchGit = true;
     };
 
-    propagatedBuildInputs = [ runtimeDir ];
+    buildInputs = [ runtimeDir ];
     
     nativeBuildInputs = [
       installShellFiles
